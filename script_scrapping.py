@@ -4,9 +4,21 @@ import numpy as np
 import pandas as pd
 from bs4 import BeautifulSoup
 
+
+"""
+Pour effectuer le scrapping des données sur le site books.toscrape.com, 
+Nous créerons 4 fonctions : get_links, get_book, get_databooks, get_image.
+Elle permettront de créer un script qui récupérera par itérations les données des livres
+et les exporter dans un fichier .csv par catégories
+"""
+
+
+
 url = 'https://books.toscrape.com/'
 
 
+
+#Fonction permettant de récupérer l'url de toutes les catégories
 def get_links(url):
     response = requests.get(url)
     link_categories = []
@@ -24,6 +36,7 @@ def get_links(url):
 
 
 
+#Fonction permettant de récupérer les liens de pages de chaque livres en gérant la pagination
 def get_books(url):
 
     response = requests.get(url)
@@ -61,10 +74,11 @@ def get_books(url):
 
 
 
+#Fonction permettant de récupérer les données d'un livre
 def get_databooks(book):
     response = requests.get(book)
     soup = BeautifulSoup(response.content, 'html.parser')
-    print('lien de livre '+ str(response.status_code))
+    print('OK '+ str(response.status_code))
 
 
     if response.ok:
@@ -73,7 +87,6 @@ def get_databooks(book):
         elements = soup.find_all({'td'})
         image = soup.find('img').attrs['src']
         prefixe = 'http://books.toscrape.com/'
-        #  class="star-rating Four" récupérer le review_rating sur la page
 
 
         keys = {}
@@ -115,7 +128,7 @@ def get_databooks(book):
 
 
 
-
+#fonction permettant de télécharger et nommer l'image d'un livre
 def  get_image(url_image, image_name):
     response = requests.get(url_image)
 
@@ -124,6 +137,14 @@ def  get_image(url_image, image_name):
 
     return
 
+
+
+
+"""
+Le script ci-dessous utilisera les fonctions et les boucles permettant de récupérer toutes les
+données des livres sur le site. Elles seront ensuite exportées en fichier .csv par catégorie,
+et les image seront téléchargées dans le dossier 'images'
+"""
 
 
 
