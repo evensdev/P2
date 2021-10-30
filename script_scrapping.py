@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 
 url = 'https://books.toscrape.com/'
 
-pass
 
 def get_links(url):
     response = requests.get(url)
@@ -23,7 +22,7 @@ def get_links(url):
 
     return (link_categories)
 
-pass
+
 
 def get_books(url):
 
@@ -32,10 +31,15 @@ def get_books(url):
     list_h3 = soup.find_all('h3')
     list_books = []
 
-    
+    for h3 in list_h3:
+        new_url = h3.find('a').attrs['href']
+        separated = new_url.split('/')
+        prefixe = 'https://books.toscrape.com/catalogue/'
 
-    i = 1
-    for i in range(20):
+        list_books.append(prefixe + separated[-2] + '/' + separated[-1])
+
+
+    for i in range(1,20):
 
         extension = 'page-' + str(i) + '.html'
         url_page = url.replace('index.html', extension)
@@ -53,12 +57,9 @@ def get_books(url):
 
                 list_books.append(prefixe + separated[-2] + '/' + separated[-1])
         else:
-            break
+            return list_books
 
 
-
-
-    return list_books
 
 def get_databooks(book):
     response = requests.get(book)
@@ -72,6 +73,7 @@ def get_databooks(book):
         elements = soup.find_all({'td'})
         image = soup.find('img').attrs['src']
         prefixe = 'http://books.toscrape.com/'
+        #  class="star-rating Four" récupérer le review_rating sur la page
 
 
         keys = {}
@@ -108,9 +110,17 @@ def get_databooks(book):
         return keys
 
 
-        book.close()
 
-pass
+
+def  get_image(url_image, image_name):
+    response = requests.get(url_image)
+
+    with open("images/"+image_name+".jpg", "wb") as file:
+        file.write(response.content)
+
+    print("coucou")
+
+    return
 
 
 
@@ -120,15 +130,26 @@ categories = get_links(url)
 
 for categorie in categories:
     books = get_books(categorie)
-
+    print(books)
     separated = categorie.split('/')
     category_name = str(separated[-2])+'.csv'
 
 
 
     with open(category_name, 'a', encoding='utf_8-sig') as file:
+        file.write('product_page_url;' +
+                   'universal_product_code;' +
+                   'title;' +
+                   'price_including_tax;' +
+                   'price_excluding_tax;' +
+                   'number_available;' +
+                   'product_description;' +
+                   'category;' +
+                   'review_rating;' +
+                   'image_url'+ "\n")
         for book in books:
             databook = get_databooks(book)
+            get_image(databook['image_url'], databook['title'])
             file.write(databook['product_page_url'] + ";" +
                        databook['universal_product_code'] + ";" +
                        databook['title'] + ";" +
@@ -140,3 +161,8 @@ for categorie in categories:
                        databook['review_rating'] + ";" +
                        databook['image_url'] + "\n")
     file.close()
+
+
+
+
+
