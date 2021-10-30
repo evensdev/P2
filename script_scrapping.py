@@ -25,20 +25,30 @@ def get_links(url):
 
 pass
 
-def get_books(categorie):
+def get_books(url):
 
-    i = 0
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    list_h3 = soup.find_all('h3')
     list_books = []
-    for i in range(100) :
+
+    for h3 in list_h3:
+        new_url = h3.find('a').attrs['href']
+        separated = new_url.split('/')
+        prefixe = 'https://books.toscrape.com/catalogue/'
+
+        list_books.append(prefixe + separated[-2] + '/' + separated[-1])
+
+    i = 1
+    for i in range(20):
 
         extension = 'page-' + str(i) + '.html'
-        url_page = categorie.replace('index.html', extension)
+        url_page = url.replace('index.html', extension)
         response = requests.get(url_page)
-
 
         if response.status_code == 200:
 
-            soup = BeautifulSoup(response.content, 'html.parser')
+            soup = BeautifulSoup(response.text, 'html.parser')
             list_h3 = soup.find_all('h3')
             prefixe = 'https://books.toscrape.com/catalogue/'
 
@@ -47,13 +57,13 @@ def get_books(categorie):
                 separated = new_url.split('/')
 
                 list_books.append(prefixe + separated[-2] + '/' + separated[-1])
+        else:
+            pass
 
-                print('livre OK: ' + prefixe + separated[-2] + '/' + separated[-1])
+
 
 
     return list_books
-
-pass
 
 def get_databooks(book):
     response = requests.get(book)
@@ -135,13 +145,3 @@ for categorie in categories:
                        databook['review_rating'] + ";" +
                        databook['image_url'] + "\n")
     file.close()
-
-
-
-
-
-
-
-
-
-
