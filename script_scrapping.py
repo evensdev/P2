@@ -58,7 +58,7 @@ def get_books(url):
 
                 list_books.append(prefixe + separated[-2] + '/' + separated[-1])
         else:
-            pass
+            break
 
 
 
