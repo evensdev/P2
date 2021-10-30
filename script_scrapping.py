@@ -82,7 +82,8 @@ def get_databooks(book):
 
         keys['universal_product_code'] = elements[0].text
 
-        keys['title'] = soup.find('h1').text
+        title = soup.find('h1').text
+        keys['title'] = title.replace('/', ' ')
 
 
         price_tax = elements[2].text
@@ -93,7 +94,8 @@ def get_databooks(book):
 
         keys['number_available'] = elements[5].text
 
-        keys['product_description'] = soup.find_all('p')[3].text
+        description = soup.find_all('p')[3].text
+        keys['product_description'] = description.replace(';', '')
 
 
         categorie = soup.find_all('a')[3]
@@ -108,6 +110,7 @@ def get_databooks(book):
         keys['image_url'] = prefixe + image
 
 
+
         return keys
 
 
@@ -118,8 +121,6 @@ def  get_image(url_image, image_name):
 
     with open("images/"+image_name+".jpg", "wb") as file:
         file.write(response.content)
-
-    print("coucou")
 
     return
 
@@ -162,8 +163,3 @@ for categorie in categories:
                        databook['review_rating'] + ";" +
                        databook['image_url'] + "\n")
     file.close()
-
-
-
-
-
