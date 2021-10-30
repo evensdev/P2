@@ -32,12 +32,7 @@ def get_books(url):
     list_h3 = soup.find_all('h3')
     list_books = []
 
-    for h3 in list_h3:
-        new_url = h3.find('a').attrs['href']
-        separated = new_url.split('/')
-        prefixe = 'https://books.toscrape.com/catalogue/'
-
-        list_books.append(prefixe + separated[-2] + '/' + separated[-1])
+    
 
     i = 1
     for i in range(20):
