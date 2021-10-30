@@ -100,8 +100,9 @@ def get_databooks(book):
         keys['category'] = categorie.text
 
 
-        review = elements[-1]
-        keys['review_rating'] = review.text
+        review = str(soup.find_all('p')[2])
+        separated = review.split('"')
+        keys['review_rating'] = separated[1]
 
 
         keys['image_url'] = prefixe + image
