@@ -8,8 +8,8 @@ from bs4 import BeautifulSoup
 """
 Pour effectuer le scrapping des données sur le site books.toscrape.com, 
 Nous créerons 4 fonctions : get_links, get_book, get_databooks, get_image.
-Elle permettront de créer un script qui récupérera par itérations les données des livres
-et les exporter dans un fichier .csv par catégories
+Elles permettront de créer un script qui récupérera par itérations les données des livres.
+et les exporter dans un fichier .csv par catégories.
 """
 
 
